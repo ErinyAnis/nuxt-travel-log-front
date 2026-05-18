@@ -12,9 +12,8 @@ const isDark = computed({
 </script>
 
 <template>
-    <h1>Color mode: {{ $colorMode.value }}</h1>
     <label class="swap swap-rotate mx-4">
-        <input type="checkbox" v-model="isDark" />
+        <input v-model="isDark" type="checkbox" />
 
         <Icon class="swap-on" name="tabler:sun" size="24" />
 
