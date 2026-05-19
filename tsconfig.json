@@ -11,13 +11,10 @@
     },
     {
       "path": "./.nuxt/tsconfig.node.json"
-    },
-    {
-      "compilerOptions": {
-        "types": ["node"]
-      }
     }
   ],
-  // https://nuxt.com/docs/guide/concepts/typescript
+  "compilerOptions": {
+    "types": ["node"]
+  },
   "files": []
 }
