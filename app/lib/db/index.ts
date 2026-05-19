@@ -1,6 +1,6 @@
 import {drizzle} from "drizzle-orm/libsql";
 import * as schema from "./schema";
-import {env} from "~/lib/env"
+import env from "~/lib/env"
 
 const db= drizzle ({
     connection: {
