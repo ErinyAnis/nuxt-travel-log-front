@@ -4,8 +4,9 @@ const error = route.query.error || 'An unknown error occurred.';
 </script>
 
 <template>
-    <div class="card bg-base-300">
-        <div role="alert" class="alert alert-error">
+    <div
+        class="card bg-base-300 container mt-4 min-h-72 text-center mx-auto flex flex-col justify-center items-center gap-4">
+        <div role="alert" class="alert alert-error min-w-1/2 text-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none"
                 viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -13,6 +14,8 @@ const error = route.query.error || 'An unknown error occurred.';
             </svg>
             <span>Oh no! {{ error }}</span>
         </div>
+        <NuxtLink to="/" class="btn btn-primary">Home
+            <Icon name="tabler:arrow-left" size="32" />
+        </NuxtLink>
     </div>
-
 </template>
