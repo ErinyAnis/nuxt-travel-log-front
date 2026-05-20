@@ -2,6 +2,7 @@ import { int, sqliteTable, text, real, unique } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 
 import { user } from "./auth";
+import type {z} from "zod";
 
 export const location = sqliteTable("location", {
     id: int().primaryKey({ autoIncrement: true }),
@@ -39,3 +40,10 @@ export const InsertLocation = createInsertSchema(location, {
     updatedAt: true,
     userId: true
 });
+
+export type InsertLocationType = {
+    name: string;
+    description?: string | null;
+    lat: number;
+    long: number;
+};
