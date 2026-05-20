@@ -1,8 +1,7 @@
-import { eq, and } from "drizzle-orm";
-import db from "~/lib/db";
-import { InsertLocation, location } from "~/lib/db/schema";
+import { InsertLocation } from "~/lib/db/schema";
 import slugify from "slug";
 import { customAlphabet } from 'nanoid';
+import { findLocationByname, findUniqueSlug, insertLocation } from "~/lib/db/queries/location";
 
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 5);
 
@@ -41,48 +40,24 @@ export default defineEventHandler(async (event) => {
         );
     }
 
+
+    const existingLocation = await findLocationByname(result.data, event.context.user.id);
+
+    if (existingLocation) {
+        return sendError(
+            event,
+            createError({
+                statusCode: 409,
+                statusMessage: `A location with the name already exists.`,
+            }),
+        );
+    }
+
+    const slug = await findUniqueSlug(slugify(result.data.name));
+
     try {
-        const existingLocation = await db.query.location.findFirst({
-            where:
-                and(
-                    eq(location.name, result.data.name),
-                    eq(location.userId, event.context.user.id),
-                )
-        });
+        return insertLocation(result.data, slug, event.context.user.id);
 
-        if (existingLocation) {
-            return sendError(
-                event,
-                createError({
-                    statusCode: 409,
-                    statusMessage: `A location with the name already exists.`,
-                }),
-            );
-        }
-
-        let slug = slugify(result.data.name);
-        let existing = !!(await db.query.location.findFirst({
-            where: eq(location.slug, slug),
-        }));
-
-        while (existing) {
-            const id = nanoid();
-            const idSlug = `${slug}-${id}`;
-            existing = !!(await db.query.location.findFirst({
-                where: eq(location.slug, idSlug),
-            }));
-            if (!existing) {
-                slug = idSlug;
-            }
-        }
-
-        const [created] = await db.insert(location).values({
-            ...result.data,
-            slug,
-            userId: event.context.user.id
-        }).returning();
-
-        return created;
     } catch (e) {
         console.error("Database error:", e);
 
@@ -105,3 +80,4 @@ export default defineEventHandler(async (event) => {
         });
     }
 });
+

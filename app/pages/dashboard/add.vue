@@ -28,7 +28,7 @@ const onSubmit = handleSubmit(async (values) => {
             setErrors(error.data?.data);
         }
 
-        submitError.value = error.statusMessage || "An error occurred while adding the location.";
+        submitError.value = error.data?.statusMessage || error.statusMessage || "An error occurred while adding the location.";
     }
     loading.value = false;
 
