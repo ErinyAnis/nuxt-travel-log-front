@@ -9,7 +9,9 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/icon',
     '@nuxtjs/color-mode',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@vee-validate/nuxt',
+    'nuxt-csurf'
   ],
   // eslint: {
   //   config: {
