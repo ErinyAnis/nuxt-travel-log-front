@@ -27,6 +27,8 @@ function toggleSidebar() {
                 <SidebarButton :showLabel="isSidebarOpen" label="Sign Out" icon="tabler:logout-2" href="/sign-out" />
             </div>
         </div>
-        <div class="flex-1"></div>
+        <div class="flex-1">
+            <NuxtPage />
+        </div>
     </div>
 </template>
