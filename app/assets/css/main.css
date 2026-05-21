@@ -1,4 +1,73 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-   themes: light --default, dark --prefersdark;
- }
+  themes:
+    light --default,
+    dark --prefersdark;
+}
+
+:root {
+  --popup-bg: #e7e9ed;
+  --popup-text: #1f2124;
+  --popup-border: #e7e9ed;
+}
+
+.dark {
+  --popup-bg: #374151;
+  --popup-text: #f9fafb;
+  --popup-border: #374151;
+}
+
+/* Apply variables */
+.maplibregl-popup-content {
+  background-color: var(--popup-bg) !important;
+  color: var(--popup-text) !important;
+  border-radius: 0.75rem !important;
+}
+
+.maplibregl-popup-tip {
+  border-bottom-color: var(--popup-border) !important;
+}
+
+.maplibregl-popup-anchor-bottom .maplibregl-popup-tip {
+  border-bottom-color: var(--popup-border) !important;
+  border-bottom-color: transparent !important;
+}
+
+.maplibregl-popup-anchor-left .maplibregl-popup-tip {
+  border-left-color: var(--popup-border) !important;
+  border-bottom-color: transparent !important;
+}
+
+.maplibregl-popup-anchor-right .maplibregl-popup-tip {
+  border-right-color: var(--popup-border) !important;
+  border-bottom-color: transparent !important;
+}
+
+.maplibregl-popup-anchor-top-left .maplibregl-popup-tip {
+  border-bottom-color: var(--popup-border) !important;
+  border-left-color: var(--popup-border) !important;
+}
+
+.maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+  border-bottom-color: var(--popup-border) !important;
+  border-right-color: var(--popup-border) !important;
+}
+
+.maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip {
+  border-bottom-color: var(--popup-border) !important;
+  border-left-color: var(--popup-border) !important;
+}
+
+.maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+  border-bottom-color: var(--popup-border) !important;
+  border-right-color: var(--popup-border) !important;
+}
+
+.maplibregl-popup-close-button {
+  right: 8px !important;
+  top: 4px !important;
+  font-size: 14px;
+  padding: 2px 6px;
+  color: inherit !important;
+  opacity: 0.7;
+}
