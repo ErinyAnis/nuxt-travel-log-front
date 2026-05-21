@@ -5,6 +5,12 @@ import { customAlphabet } from 'nanoid';
 
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 5);
 
+export async function findLocations(userId: number) {
+    return db.query.location.findMany({
+        where: eq(location.userId, userId),
+    });
+}
+
 export async function findLocationByname(data: { name: string }, userId: number) {
     return db.query.location.findFirst({
         where: and(
