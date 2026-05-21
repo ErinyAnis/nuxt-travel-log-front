@@ -11,7 +11,8 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@pinia/nuxt',
     '@vee-validate/nuxt',
-    'nuxt-csurf'
+    'nuxt-csurf',
+    'nuxt-maplibre'
   ],
   // eslint: {
   //   config: {
@@ -23,6 +24,14 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+    optimizeDeps: {
+      include: ['maplibre-gl']
+    }
+  },
+   runtimeConfig: {
+    public: {
+      maptilerKey: process.env.NUXT_PUBLIC_MAPTILER_KEY
+    }
   },
   colorMode: {
     dataValue: 'theme',
