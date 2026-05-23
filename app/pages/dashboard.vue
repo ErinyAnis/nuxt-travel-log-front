@@ -39,10 +39,10 @@ function toggleSidebar() {
                 </div>
 
                 <div v-if="!sidebarStore.loading && sidebarStore.sidebarItems.length" class="flex flex-col">
-                    <SidebarButton :showLabel="isSidebarOpen" v-for="item in sidebarStore.sidebarItems" :key="item.id"
-                        :label="item.label" :icon="item.icon" :href="item.href"
-                        :icon-color="mapStore.selectedPoint === item.location ? 'text-accent' : undefined"
-                        @mouseenter="mapStore.selectedPoint = item.location ?? null"
+                    <SidebarButton v-for="item in sidebarStore.sidebarItems" :key="item.id" :showLabel="isSidebarOpen"
+                        :label="item.label" :icon="item.icon" :to="item.to"
+                        :icon-color="isPointSelected(item.mapPoint, mapStore.selectedPoint) ? 'text-accent' : undefined"
+                        @mouseenter="mapStore.selectedPoint = item.mapPoint ?? null"
                         @mouseleave="mapStore.selectedPoint = null" />
                 </div>
 

@@ -7,6 +7,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "dev:db": "turso dev --db-file local.db",
+    "typecheck": "nuxi typecheck",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -54,6 +55,7 @@
     "drizzle-kit": "^0.31.10",
     "eslint": "^10.4.0",
     "eslint-plugin-better-tailwindcss": "^4.5.0",
-    "eslint-plugin-format": "^2.0.1"
+    "eslint-plugin-format": "^2.0.1",
+    "vue-tsc": "^3.3.1"
   }
 }

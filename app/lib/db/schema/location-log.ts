@@ -1,6 +1,7 @@
 import {int,sqliteTable,text,real} from "drizzle-orm/sqlite-core";
 import { location } from "./location";
 import { user } from "./auth";
+import { relations } from "drizzle-orm";
 
 export const locationLog = sqliteTable("locationLog",{
     id: int().primaryKey({autoIncrement: true}),
@@ -15,3 +16,10 @@ export const locationLog = sqliteTable("locationLog",{
     createdAt: int().notNull().$default(() => Date.now()),
     updatedAt: int().notNull().$default(() => Date.now()).$onUpdate(() => Date.now()),
 });
+
+export const locationlogRelations = relations(locationLog, ({ one }) => ({
+    location: one(location, {
+        fields: [locationLog.locationId],
+        references: [location.id]
+    })
+}))
