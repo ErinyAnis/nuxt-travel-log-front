@@ -5,11 +5,11 @@
   "sources": {
     "openmaptiles": {
       "type": "vector",
-      "url": "https://tiles.openfreemap.org/planet"
+      "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=f6UkYb6QvZigAW76c39y"
     }
   },
-  "sprite": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
-  "glyphs": "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+  "sprite": "https://api.maptiler.com/maps/basic-v2/sprite?key=f6UkYb6QvZigAW76c39y",
+  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=f6UkYb6QvZigAW76c39y",
   "layers": [
     {
       "id": "Background",

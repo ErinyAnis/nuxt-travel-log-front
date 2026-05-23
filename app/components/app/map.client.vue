@@ -7,9 +7,9 @@ const colorMode = useColorMode();
 const isDark = computed(() => colorMode.value === 'dark');
 const mapStore = useMapStore();
 
-// const style = 'https://tiles.openfreemap.org/styles/liberty?key=yC4AXZ0CmAmHyBtjGrwR';
+// const style = 'https://tiles.openfreemap.org/styles/liberty?key=f6UkYb6QvZigAW76c39y';
 // const style = '/styles/dark.json';
-const style = computed(() => colorMode.value === 'dark' ? '/styles/dark.json' : 'https://tiles.openfreemap.org/styles/liberty?key=yC4AXZ0CmAmHyBtjGrwR');
+const style = computed(() => colorMode.value === 'dark' ? '/styles/dark.json' : 'https://api.maptiler.com/maps/basic-v2/style.json?key=f6UkYb6QvZigAW76c39y');
 const zoom = 3;
 
 function updateAddedPoint(location: LngLat) {
