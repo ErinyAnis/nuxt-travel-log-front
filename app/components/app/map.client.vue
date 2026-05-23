@@ -36,7 +36,7 @@ onMounted(() => {
         <MglMap :map-style="style" :center="CENTER_USA" :zoom="zoom" @map:dblclick="onDoubleClick"
             :container-style="{ height: '100%', width: '100%' }">
             <MglNavigationControl />
-            <MglMarker v-if="mapStore.addedPoint" draggable
+            <MglMarker v-if="mapStore.addedPoint" draggable class-name="z-50"
                 :coordinates="[mapStore.addedPoint.long, mapStore.addedPoint.lat]"
                 @update:coordinates="updateAddedPoint">
                 <template v-slot:marker>

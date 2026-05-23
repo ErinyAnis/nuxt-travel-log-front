@@ -3,6 +3,7 @@ import { FetchError } from "ofetch";
 import { toTypedSchema } from "@vee-validate/zod";
 import { InsertLocation } from "~/lib/db/schema";
 import { CENTER_USA } from "~/lib/constants";
+import type { NominatimResult } from "~/lib/types";
 
 const { $csrfFetch } = useNuxtApp();
 const router = useRouter();
@@ -36,7 +37,7 @@ const onSubmit = handleSubmit(async (values) => {
             setErrors(error.data?.data);
         }
 
-        submitError.value = error.data?.statusMessage || error.statusMessage || "An error occurred while adding the location.";
+        submitError.value = getFetchErrorMessage(error);
     }
     loading.value = false;
 });
@@ -51,6 +52,18 @@ effect(() => {
 function formatNumber(value?: number) {
     if (!value) return 0;
     return value.toFixed(5);
+}
+
+function searchResultSelected(result: NominatimResult) {
+    setFieldValue('name', result.display_name);
+    mapStores.addedPoint = {
+        name: "Added Point",
+        description: "",
+        id: 1,
+        lat: Number(result.lat),
+        long: Number(result.lon),
+        centerMap: true
+    }
 }
 
 onMounted(() => {
@@ -90,18 +103,19 @@ onBeforeRouteLeave(() => {
             <AppFormField label="Description" name="description" :error="errors.description" type="textarea"
                 :disabled="loading" />
 
-            <p>
-                Drag your marker
-                <Icon name="tabler:map-pin-filled" class="text-warning" /> to your desired location.
-            </p>
-            <p>Or double click on the map.</p>
-
             <p class="text-sm text-gray-400">
-                Current location: {{ formatNumber(controlledValues.lat) }}, {{ formatNumber(controlledValues.long) }}
+                Current coordinates: {{ formatNumber(controlledValues.lat) }}, {{ formatNumber(controlledValues.long) }}
             </p>
+            <p>To set the coordinates:</p>
+            <ul class="list-disc ml-4 text-sm">
+                <li>
+                    Drag your marker
+                    <Icon name="tabler:map-pin-filled" class="text-warning" /> on the map.
+                </li>
+                <li>Double click the map.</li>
+                <li>Search for a location below.</li>
+            </ul>
 
-            <!-- <AppFormField label="Latitude" name="lat" :error="errors.lat" type="number" :disabled="loading" />
-            <AppFormField label="Longitude" name="long" :error="errors.long" type="number" :disabled="loading" /> -->
 
             <div class="flex justify-end gap-2 mt-3">
                 <button :disabled="loading" type="button" class="btn btn-outline" @click="router.back()">
@@ -113,5 +127,8 @@ onBeforeRouteLeave(() => {
                 </button>
             </div>
         </form>
+
+        <div class="divider" />
+        <AppPlaceSearch @results-selected="searchResultSelected" />
     </div>
 </template>
