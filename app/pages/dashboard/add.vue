@@ -11,7 +11,13 @@ const submitted = ref(false);
 const submitError = ref("");
 const mapStores = useMapStore();
 const { handleSubmit, errors, meta, setErrors, setFieldValue, controlledValues } = useForm({
-    validationSchema: toTypedSchema(InsertLocation as any)
+    validationSchema: toTypedSchema(InsertLocation as any),
+    initialValues: {
+        name: "",
+        description: "",
+        lat: CENTER_USA[1],
+        long: CENTER_USA[0],
+    }
 });
 
 const onSubmit = handleSubmit(async (values) => {
@@ -88,6 +94,7 @@ onBeforeRouteLeave(() => {
                 Drag your marker
                 <Icon name="tabler:map-pin-filled" class="text-warning" /> to your desired location.
             </p>
+            <p>Or double click on the map.</p>
 
             <p class="text-sm text-gray-400">
                 Current location: {{ formatNumber(controlledValues.lat) }}, {{ formatNumber(controlledValues.long) }}
