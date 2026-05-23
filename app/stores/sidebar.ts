@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
+import type { MapPoint } from "~/lib/types";
 
 export type SidebarItem = {
     id: string;
     label : string;
     icon : string;
     href : string;
+    location?: MapPoint | null;
 }
 
 export const useSidebarStore = defineStore("useSidebarStore", () => {

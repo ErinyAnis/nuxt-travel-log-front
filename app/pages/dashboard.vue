@@ -3,6 +3,7 @@ const isSidebarOpen = ref(true);
 const route = useRoute();
 const sidebarStore = useSidebarStore();
 const locationStore = useLocationStore();
+const mapStore = useMapStore();
 
 onMounted(() => {
     isSidebarOpen.value = localStorage.getItem('isSidebarOpen') === 'true';
@@ -39,7 +40,10 @@ function toggleSidebar() {
 
                 <div v-if="!sidebarStore.loading && sidebarStore.sidebarItems.length" class="flex flex-col">
                     <SidebarButton :showLabel="isSidebarOpen" v-for="item in sidebarStore.sidebarItems" :key="item.id"
-                        :label="item.label" :icon="item.icon" :href="item.href" />
+                        :label="item.label" :icon="item.icon" :href="item.href"
+                        :icon-color="mapStore.selectedPoint === item.location ? 'text-accent' : undefined"
+                        @mouseenter="mapStore.selectedPoint = item.location ?? null"
+                        @mouseleave="mapStore.selectedPoint = null" />
                 </div>
 
 
@@ -47,12 +51,11 @@ function toggleSidebar() {
                 <SidebarButton :showLabel="isSidebarOpen" label="Sign Out" icon="tabler:logout-2" href="/sign-out" />
             </div>
         </div>
-        <div class="flex-1 overflow-auto">
-            <div class="flex flex-col size-full">
+        <div class="flex-1 overflow-auto bg-base-200">
+            <div class="flex size-full" :class="{ 'flex-col': route.path !== '/dashboard/add' }">
                 <NuxtPage />
                 <AppMap class="flex-1" />
             </div>
-
         </div>
     </div>
 </template>
