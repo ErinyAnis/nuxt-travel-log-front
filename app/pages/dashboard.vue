@@ -91,7 +91,6 @@ function toggleSidebar() {
                     <div class="loading" />
                 </div>
 
-
                 <div class="divider" />
                 <SidebarButton :showLabel="isSidebarOpen" label="Sign Out" icon="tabler:logout-2" href="/sign-out" />
             </div>
