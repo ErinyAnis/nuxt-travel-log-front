@@ -5,9 +5,14 @@ import type { InsertLocationLog } from '~/lib/db/schema/location-log';
 const route = useRoute();
 const { currentLocation } = useLocationStore();
 
+const { $csrfFetch } = useNuxtApp();
+
 async function onSubmit(values: InsertLocationLog) {
-    console.log(values);
-}
+    await $csrfFetch(`/api/locations/${route.params.slug}/add`, {
+        method: "POST",
+        body: values
+    });
+};
 
 function submitComplete() {
     navigateTo({
@@ -17,7 +22,7 @@ function submitComplete() {
 }
 </script>
 
-<template>>
+<template>
     <LocationLogForm submit-label="Add Location Log" submit-icon="tabler:map-pin-plus" :on-submit="onSubmit"
         :on-submit-complete="submitComplete" :initial-values="{
             name: '',

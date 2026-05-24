@@ -12,7 +12,6 @@ async function onSubmit(values: InsertLocationType) {
         method: "PUT",
         body: values
     });
-
 };
 
 function onSubmitComplete() {

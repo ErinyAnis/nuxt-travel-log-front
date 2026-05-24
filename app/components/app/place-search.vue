@@ -77,8 +77,6 @@ function setLocation(result: NominatimResult) {
             <div class="loading loading-lg"></div>
         </div>
 
-
-
         <div class="flex flex-col gap-2 overflow-auto max-h-60 custom-scrollbar mt-2">
             <div class="card card-sm bg-base-100" v-for="result in searchResults" :key="result.place_id">
                 <div class="card-body">
@@ -89,11 +87,8 @@ function setLocation(result: NominatimResult) {
                         </button>
                     </div>
                 </div>
-
             </div>
         </div>
-
-
     </div>
 
 </template>

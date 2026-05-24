@@ -126,7 +126,6 @@ onBeforeRouteLeave(async () => {
                 <li>Search for a location below.</li>
             </ul>
 
-
             <div class="flex justify-end gap-2 mt-3">
                 <button :disabled="loading" type="button" class="btn btn-outline" @click="router.back()">
                     <Icon name="tabler:arrow-left" size="24" />Cancel

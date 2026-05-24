@@ -32,6 +32,19 @@ export const InsertLocationLog = z.object({
     endedAt: z.number().int(),
     lat: z.number().min(-90).max(90),
     long: z.number().min(-180).max(180),
+}).superRefine((values, context) => {
+    if (values.startedAt > values.endedAt || values.endedAt < values.startedAt) {
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Start Date must be before End Date",
+            path: ["startedAt"],
+        });
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "End Date must be after Start Date",
+            path: ["endedAt"],
+        });
+    }
 });
 
 export type InsertLocationLog = z.infer<typeof InsertLocationLog>;
