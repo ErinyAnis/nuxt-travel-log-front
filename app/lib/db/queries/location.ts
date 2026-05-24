@@ -5,6 +5,18 @@ import { customAlphabet } from 'nanoid';
 
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 5);
 
+export async function findLocation(slug: string, userId: number) {
+    return db.query.location.findFirst({
+        where: and(
+            eq(location.slug, slug),
+            eq(location.userId, userId)
+        ),
+        with: {
+            locationLogs: true
+        }
+    });
+}
+
 export async function findLocations(userId: number) {
     return db.query.location.findMany({
         where: eq(location.userId, userId),
@@ -50,4 +62,20 @@ export async function insertLocation(insertable: InsertLocationType, slug: strin
         userId,
     }).returning();
     return created;
+}
+
+export async function updateLocationBySlug(updates: InsertLocationType, slug: string, userId: number) {
+    const [updated] = await db.update(location).set(updates).where(and(
+        eq(location.slug, slug),
+        eq(location.userId, userId),
+    )).returning();
+    return updated;
+}
+
+export async function removeLocationBySlug(slug: string, userId: number) {
+    const [removed] = await db.delete(location).where(and(
+        eq(location.slug, slug),
+        eq(location.userId, userId)
+    )).returning();
+    return removed;
 }
