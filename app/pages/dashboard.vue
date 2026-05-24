@@ -30,23 +30,26 @@ effect(() => {
     } else if (CURRENT_LOCATION_PAGES.has(route.name?.toString() || '')) {
         sidebarStore.sidebarTopItems = [{
             id: 'link-dashboard', label: 'Back to Locations', icon: 'tabler:arrow-left', href: '/dashboard',
-        },
-        {
-            id: 'link-dashboard', label: currentLocationStatus.value === 'pending' || !currentLocation.value ? 'Loading...' : currentLocation.value.name, icon: 'tabler:map', to: {
-                name: 'dashboard-location-slug', params: { slug: route.params.slug }
-            },
-        },
-        {
-            id: 'link-location-edit', label: 'Edit Location', icon: 'tabler:map-pin-cog', to: {
-                name: 'dashboard-location-slug-edit', params: { slug: route.params.slug }
-            },
-        },
-        {
-            id: 'link-location-add', label: 'Add Location Log', icon: 'tabler:circle-plus-filled', to: {
-                name: 'dashboard-location-slug-add', params: { slug: route.params.slug }
-            },
+        }];
+
+        if (currentLocation.value && currentLocationStatus.value !== 'pending') {
+            sidebarStore.sidebarTopItems.push(
+                {
+                    id: 'link-dashboard', label: currentLocation.value.name, icon: 'tabler:map', to: {
+                        name: 'dashboard-location-slug', params: { slug: route.params.slug }
+                    },
+                },
+                {
+                    id: 'link-location-edit', label: 'Edit Location', icon: 'tabler:map-pin-cog', to: {
+                        name: 'dashboard-location-slug-edit', params: { slug: route.params.slug }
+                    },
+                },
+                {
+                    id: 'link-location-add', label: 'Add Location Log', icon: 'tabler:circle-plus-filled', to: {
+                        name: 'dashboard-location-slug-add', params: { slug: route.params.slug }
+                    },
+                });
         }
-        ];
     }
 })
 
@@ -81,6 +84,11 @@ function toggleSidebar() {
                         :icon-color="isPointSelected(item.mapPoint, mapStore.selectedPoint) ? 'text-accent' : undefined"
                         @mouseenter="mapStore.selectedPoint = item.mapPoint ?? null"
                         @mouseleave="mapStore.selectedPoint = null" />
+                </div>
+
+                <div v-if="route.path.startsWith('/dashboard/location') && currentLocationStatus === 'pending'"
+                    class="flex items-center justify-center">
+                    <div class="loading" />
                 </div>
 
 

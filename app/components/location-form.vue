@@ -21,6 +21,8 @@ import { FetchError } from "ofetch";
 const loading = ref(false);
 const submitted = ref(false);
 const submitError = ref("");
+const isConfirmDialogOpen = ref(false);
+let resolveConfirm: ((value: boolean) => void) | null = null;
 
 const { handleSubmit, errors, meta, setErrors, setFieldValue, controlledValues } = useForm({
     validationSchema: toTypedSchema(InsertLocation as any),
@@ -85,12 +87,23 @@ onMounted(() => {
     }
 });
 
-onBeforeRouteLeave(() => {
+function openConfirmDialog(): Promise<boolean> {
+    isConfirmDialogOpen.value = true;
+    return new Promise((resolve) => {
+        resolveConfirm = resolve;
+    });
+}
+
+function onDialogClosed(confirmed: boolean) {
+    isConfirmDialogOpen.value = false;
+    resolveConfirm?.(confirmed);
+    resolveConfirm = null;
+}
+
+onBeforeRouteLeave(async () => {
     if (!submitted.value && meta.value.dirty) {
-        const confirm = window.confirm("Are you sure you want to leave? All unsaved changes will be lost.");
-        if (!confirm) {
-            return false;
-        }
+        const confirm = await openConfirmDialog();
+        if (!confirm) return false;
     }
     mapStores.addedPoint = null;
     return true;
@@ -131,9 +144,10 @@ onBeforeRouteLeave(() => {
                 </button>
             </div>
         </form>
-
-
         <div class="divider" />
         <AppPlaceSearch @results-selected="searchResultSelected" />
     </div>
+    <AppDialog title="Are you sure?" description="Are you sure you want to leave? All unsaved changes will be lost."
+        confirm-label="Yes, leave!" confirm-class="btn-warning" :is-open="isConfirmDialogOpen"
+        @on-confirmed="onDialogClosed(true)" @on-closed="onDialogClosed(false)" />
 </template>
