@@ -1,3 +1,31 @@
-<template>
-    <h2>Location Log Add Page!</h2>
+<script lang="ts" setup>
+import { CENTER_USA } from '~/lib/constants';
+import type { InsertLocationLog } from '~/lib/db/schema/location-log';
+
+const route = useRoute();
+const { currentLocation } = useLocationStore();
+
+async function onSubmit(values: InsertLocationLog) {
+    console.log(values);
+}
+
+function submitComplete() {
+    navigateTo({
+        name: 'dashboard-location-slug',
+        params: { slug: route.params.slug }
+    });
+}
+</script>
+
+<template>>
+    <LocationLogForm submit-label="Add Location Log" submit-icon="tabler:map-pin-plus" :on-submit="onSubmit"
+        :on-submit-complete="submitComplete" :initial-values="{
+            name: '',
+            description: '',
+            startedAt: Date.now() - 24 * 60 * 60 * 1000,
+            endedAt: Date.now(),
+            long: currentLocation?.long || (CENTER_USA as [number, number])[0],
+            lat: currentLocation?.lat || (CENTER_USA as [number, number])[1]
+        }
+            " />
 </template>

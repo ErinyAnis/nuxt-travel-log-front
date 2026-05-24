@@ -1,10 +1,11 @@
-import {int,sqliteTable,text,real} from "drizzle-orm/sqlite-core";
+import { int, sqliteTable, text, real } from "drizzle-orm/sqlite-core";
 import { location } from "./location";
 import { user } from "./auth";
 import { relations } from "drizzle-orm";
+import { z } from "zod";
 
-export const locationLog = sqliteTable("locationLog",{
-    id: int().primaryKey({autoIncrement: true}),
+export const locationLog = sqliteTable("locationLog", {
+    id: int().primaryKey({ autoIncrement: true }),
     name: text().notNull(),
     description: text(),
     startedAt: int().notNull(),
@@ -22,6 +23,16 @@ export const locationlogRelations = relations(locationLog, ({ one }) => ({
         fields: [locationLog.locationId],
         references: [location.id]
     })
-}))
+}));
 
+export const InsertLocationLog = z.object({
+    name: z.string().min(1, "Required").max(100),
+    description: z.string().max(1000).nullable().optional(),
+    startedAt: z.number().int(),
+    endedAt: z.number().int(),
+    lat: z.number().min(-90).max(90),
+    long: z.number().min(-180).max(180),
+});
+
+export type InsertLocationLog = z.infer<typeof InsertLocationLog>;
 export type SelectLocationLog = typeof locationLog.$inferSelect;
