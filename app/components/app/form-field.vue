@@ -15,8 +15,8 @@ const props = defineProps<{
         <Field v-if="type !== 'textarea'" :as="'input'" :name="props.name" :type="type || 'text'" :disabled="disabled"
             class="input w-full" :class="{ 'input-error': props.error }" />
 
-        <Field v-else :as="'textarea'" :name="props.name" :disabled="disabled" class="textarea w-full"
-            :class="{ 'input-error': props.error }" rows="4" />
+        <Field v-else :as="'textarea'" :name="props.name" :disabled="disabled" class="textarea w-full resize-none"
+            :class="{ 'input-error': props.error }" rows="6" />
 
         <p v-if="props.error" class="fieldset-label text-error">{{ props.error }}</p>
     </fieldset>
