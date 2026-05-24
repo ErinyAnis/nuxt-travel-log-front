@@ -5,11 +5,45 @@ const sidebarStore = useSidebarStore();
 const locationStore = useLocationStore();
 const mapStore = useMapStore();
 
+const { currentLocation } = storeToRefs(locationStore);
+
 onMounted(() => {
     isSidebarOpen.value = localStorage.getItem('isSidebarOpen') === 'true';
     if (route.path !== '/dashboard') {
-        locationStore.refresh();
+        locationStore.refreshLocations();
     }
+    effect(() => {
+        if (route.name === 'dashboard') {
+            sidebarStore.sidebarTopItems = [{
+                id: 'link-dashboard', label: 'Locations', icon: 'tabler:map', href: '/dashboard',
+            },
+            {
+                id: 'link-location-add', label: 'Add Location', icon: 'tabler:circle-plus-filled', href: '/dashboard/add',
+            }
+            ];
+        } else if (route.name === "dashboard-location-slug") {
+            sidebarStore.sidebarTopItems = [{
+                id: 'link-dashboard', label: 'Back to Locations', icon: 'tabler:arrow-left', href: '/dashboard',
+            },
+            {
+                id: 'link-dashboard', label: currentLocation.value ? currentLocation.value.name : 'View Logs', icon: 'tabler:map', to: {
+                    name: 'dashboard-location-slug', params: { slug: currentLocation.value?.slug }
+                },
+            },
+            {
+                id: 'link-location-edit', label: 'Edit Location', icon: 'tabler:map-pin-cog', to: {
+                    name: 'dashboard-location-slug-edit', params: { slug: currentLocation.value?.slug }
+                },
+            },
+            {
+                id: 'link-location-add', label: 'Add Location Log', icon: 'tabler:circle-plus-filled', to: {
+                    name: 'dashboard-location-slug-add', params: { slug: currentLocation.value?.slug }
+                },
+            }
+            ];
+        }
+    })
+
 });
 
 function toggleSidebar() {
@@ -28,9 +62,8 @@ function toggleSidebar() {
                 <Icon v-else name="tabler:chevron-right" size="32" />
             </div>
             <div class="flex flex-col">
-                <SidebarButton :showLabel="isSidebarOpen" label="Locations" icon="tabler:map" href="/dashboard" />
-                <SidebarButton :showLabel="isSidebarOpen" label="Add Location" icon="tabler:circle-plus-filled"
-                    href="/dashboard/add" />
+                <SidebarButton v-for="item in sidebarStore.sidebarTopItems" :key="item.id" :showLabel="isSidebarOpen"
+                    :label="item.label" :icon="item.icon" :href="item.href" :to="item.to" />
 
                 <div v-if="sidebarStore.loading || sidebarStore.sidebarItems.length" class="divider" />
 
