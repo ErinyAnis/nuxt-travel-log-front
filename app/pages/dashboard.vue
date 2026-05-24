@@ -91,7 +91,6 @@ function toggleSidebar() {
                     <div class="loading" />
                 </div>
 
-
                 <div class="divider" />
                 <SidebarButton :showLabel="isSidebarOpen" label="Sign Out" icon="tabler:logout-2" href="/sign-out" />
             </div>
@@ -99,7 +98,6 @@ function toggleSidebar() {
         <div class="flex-1 overflow-auto bg-base-200">
             <div class="flex size-full" :class="{
                 'flex-col': !EDIT_PAGES.has(route.name?.toString() || '')
-
             }">
                 <NuxtPage :class="{
                     'w-96': EDIT_PAGES.has(route.name?.toString() || ''),

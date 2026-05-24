@@ -12,7 +12,6 @@ async function onSubmit(values: InsertLocationType) {
         method: "PUT",
         body: values
     });
-
 };
 
 function onSubmitComplete() {
@@ -24,6 +23,7 @@ function onSubmitComplete() {
 </script>
 
 <template>
-    <LocationForm v-if="locationStore.currentLocationStatus !== 'pending'" :on-submit :on-submit-complete
-        :initial-values="locationStore.currentLocation" submit-label="Update" submit-icon="tabler:map-pin-up" />
+    <LocationForm v-if="locationStore.currentLocationStatus !== 'pending' && locationStore.currentLocation" :on-submit
+        :on-submit-complete :initial-values="locationStore.currentLocation" :zoom="11" submit-label="Update"
+        submit-icon="tabler:map-pin-up" />
 </template>

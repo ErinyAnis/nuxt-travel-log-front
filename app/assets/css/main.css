@@ -17,6 +17,13 @@
   --popup-border: #374151;
 }
 
+.location-list {
+  @apply flex flex-nowrap my-4 gap-2 overflow-x-auto overflow-y-hidden py-3;
+}
+.page-content-top {
+  @apply p-4 min-h-72;
+}
+
 /* Apply variables */
 .maplibregl-popup-content {
   background-color: var(--popup-bg) !important;
@@ -125,22 +132,4 @@
 
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #64748b, #94a3b8);
-}
-
-/* Optional: Add fade effect on edges */
-.custom-scrollbar {
-  mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 5%,
-    black 95%,
-    transparent
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent,
-    black 5%,
-    black 95%,
-    transparent
-  );
 }

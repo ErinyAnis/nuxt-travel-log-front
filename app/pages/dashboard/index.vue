@@ -16,20 +16,9 @@ onMounted(() => {
             <span class="loading loading-spinner loading-xl"></span>
         </div>
 
-        <div v-else-if="locations && locations.length > 0"
-            class="flex flex-nowrap my-4 gap-2 overflow-x-auto overflow-y-hidden custom-scrollbar py-3">
-            <NuxtLink :to="{ name: 'dashboard-location-slug', params: { slug: location.slug } }"
-                v-for="location in locations" :key="location.id"
-                class="card card-compact bg-base-300 h-40 border-2 w-72 mb-2 shrink-0 cursor-pointer" :class="{
-                    'border-accent': isPointSelected(location, mapStore.selectedPoint),
-                    'border-transparent': !isPointSelected(location, mapStore.selectedPoint)
-                }" @mouseenter="mapStore.selectedPoint = createMapPointFromLocation(location)"
-                @mouseleave="mapStore.selectedPoint = null">
-                <div class="card-body">
-                    <h3 class="text-xl">{{ location.name }}</h3>
-                    <p class="text-sm line-clamp-4">{{ location.description }}</p>
-                </div>
-            </NuxtLink>
+        <div v-else-if="locations && locations.length > 0" class="location-list custom-scrollbar">
+            <LocationCard v-for="location in locations" :key="location.id"
+                :mapPoint="createMapPointFromLocation(location)" />
         </div>
 
         <div v-else class="flex flex-col gap-2 mt-4">
@@ -41,8 +30,6 @@ onMounted(() => {
                 </NuxtLink>
             </div>
         </div>
-
-
     </div>
 
 </template>
