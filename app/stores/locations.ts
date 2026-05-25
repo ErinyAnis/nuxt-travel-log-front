@@ -1,5 +1,5 @@
 import { CURRENT_LOCATION_PAGES, LOCATION_PAGES } from "~/lib/constants";
-import type { SelectLocationWithLogs } from "~/lib/db/schema";
+import type { SelectLocationWithLogs, SelectLocationLog } from "~/lib/db/schema";
 import type { MapPoint } from "~/lib/types";
 
 export const useLocationStore = defineStore("useLocationStore", () => {
@@ -19,6 +19,20 @@ export const useLocationStore = defineStore("useLocationStore", () => {
         return `/api/locations/${slug}`;
     });
 
+    const locationLogUrlWithSlugAndId = computed(() => {
+    const slug = route.params.slug;
+    const id = route.params.id;
+
+    if (
+        !slug || typeof slug !== 'string' ||
+        !id || typeof id !== 'string'
+    ) {
+        return null;
+    }
+
+    return `/api/locations/${slug}/${id}`;
+});
+
     const {
         data: currentLocation,
         status: currentLocationStatus,
@@ -29,6 +43,20 @@ export const useLocationStore = defineStore("useLocationStore", () => {
         immediate: false,
         watch: [locationUrlWithSlug],
     });
+
+    const {
+    data: currentLocationLog,
+    status: currentLocationLogStatus,
+    error: currentLocationLogError,
+    refresh: refreshCurrentLocationLog,
+} = useFetch<SelectLocationLog>(
+    () => locationLogUrlWithSlugAndId.value ?? '',
+    {
+        lazy: true,
+        immediate: false,
+        watch: [locationLogUrlWithSlugAndId],
+    }
+);
 
     const sidebarStore = useSidebarStore();
     const mapStore = useMapStore();
@@ -91,6 +119,12 @@ export const useLocationStore = defineStore("useLocationStore", () => {
                 mapStore.mapPoints = [currentLocation.value];
             }
         }
+
+        else if (currentLocationLog.value && CURRENT_LOCATION_PAGES.has(route.name?.toString() || "")) {
+            sidebarStore.sidebarItems = [];
+            mapStore.mapPoints = [currentLocationLog.value];
+        }
+
         sidebarStore.loading =
             locationsStatus.value === 'pending' ||
             currentLocationStatus.value === 'pending';
@@ -107,6 +141,10 @@ export const useLocationStore = defineStore("useLocationStore", () => {
         currentLocation,
         currentLocationStatus,
         currentLocationError,
-        refreshCurrentLocation
+        refreshCurrentLocation,
+        currentLocationLog,
+        currentLocationLogStatus,
+        currentLocationLogError,
+        refreshCurrentLocationLog
     };
 });

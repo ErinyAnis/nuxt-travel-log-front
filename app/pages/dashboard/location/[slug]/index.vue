@@ -120,5 +120,4 @@ onBeforeRouteUpdate((to) => {
             confirm-label="Yes, delete this location!" confirm-class="btn-error" :is-open="isOpen"
             @on-closed="isOpen = false" @on-confirmed="confirmDelete" />
     </div>
-
 </template>
