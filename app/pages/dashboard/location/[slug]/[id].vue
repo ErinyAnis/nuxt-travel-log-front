@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { FetchError } from "ofetch";
+
 const route = useRoute();
 const locationStore = useLocationStore();
 const {
@@ -7,8 +9,39 @@ const {
     currentLocationLogError: error }
     = storeToRefs(locationStore);
 
-const loading = computed(() => status.value === 'pending');
-const errorMessage = computed(() => error.value?.statusMessage);
+const isOpen = ref(false);
+const deleteError = ref("");
+const isDeleting = ref(false);
+const loading = computed(() => isDeleting.value || status.value === 'pending');
+const errorMessage = computed(() => deleteError.value || error.value?.statusMessage);
+
+async function confirmDelete() {
+    try {
+        isOpen.value = false;
+        deleteError.value = "";
+        isDeleting.value = true;
+        await $fetch(`/api/locations/${route.params.slug}/${route.params.id}`, {
+            method: 'DELETE',
+        });
+        navigateTo({
+            name: "dashboard-location-slug",
+            params: { slug: route.params.slug }
+        });
+    } catch (e) {
+        const error = e as FetchError;
+        deleteError.value = getFetchErrorMessage(error);
+    }
+    isDeleting.value = false;
+}
+
+function openDialog() {
+    isOpen.value = true;
+    (document.activeElement as HTMLAnchorElement).blur();
+}
+
+onMounted(() => {
+    locationStore.refreshCurrentLocationLog();
+});
 
 onBeforeRouteUpdate((to) => {
     if (to.name === "dashboard-location-slug-id") {
@@ -38,18 +71,39 @@ onBeforeRouteUpdate((to) => {
             </p>
             <div class="flex items-center">
                 <h2 class="text-xl">{{ locationLog.name }}</h2>
+                <div class="dropdown dropdown-bottom">
+                    <div tabindex="0" role="button" class="btn m-1 btn-sm border-0 p-0">
+                        <Icon name="tabler:dots-vertical" size="20" />
+                    </div>
+                    <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 shadow-sm">
+                        <li class="hover:bg-base-300 hover:cursor-pointer">
+                            <NuxtLink @click="openDialog">
+                                <Icon name="tabler:trash-x-filled" size="20" />Delete
+                            </NuxtLink>
+                        </li>
+                        <li class="hover:bg-base-300 hover:cursor-pointer">
+                            <NuxtLink
+                                :to="{ name: 'dashboard-location-slug-id-edit', params: { slug: route.params.slug, id: route.params.id } }">
+                                <Icon name="tabler:map-pin-cog" size="20" />Edit
+                            </NuxtLink>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <div class="max-w-xl">
                 <p class="text-sm">{{ locationLog.description }}</p>
             </div>
-
-
         </div>
 
         <div v-else>
             <NuxtPage />
         </div>
+
+        <AppDialog title="Are you sure?"
+            description="Deleting this location log cannot be undone. Do you want to continue?"
+            confirm-label="Yes, delete this location log!" confirm-class="btn-error" :is-open="isOpen"
+            @on-closed="isOpen = false" @on-confirmed="confirmDelete" />
     </div>
 
 </template>
