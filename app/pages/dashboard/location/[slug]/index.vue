@@ -41,7 +41,6 @@ async function confirmDelete() {
     isDeleting.value = false;
 }
 
-
 onBeforeRouteUpdate((to) => {
     if (to.name === 'dashboard-location-slug') {
         locationStore.refreshCurrentLocation();
@@ -120,5 +119,4 @@ onBeforeRouteUpdate((to) => {
             confirm-label="Yes, delete this location!" confirm-class="btn-error" :is-open="isOpen"
             @on-closed="isOpen = false" @on-confirmed="confirmDelete" />
     </div>
-
 </template>
