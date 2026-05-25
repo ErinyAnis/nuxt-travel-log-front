@@ -5,22 +5,30 @@ import type { MapPoint } from "~/lib/types";
 export const useLocationStore = defineStore("useLocationStore", () => {
     const route = useRoute();
 
-    const { data: locations, status: locationsStaus, refresh: refreshLocations } = useFetch('/api/locations', {
+    const { data: locations, status: locationsStatus, refresh: refreshLocations } = useFetch('/api/locations', {
         lazy: true,
     });
 
-    const locationUrlWithSlug = computed(() => `/api/locations/${route.params.slug}`);
+    const locationUrlWithSlug = computed(() => {
+        const slug = route.params.slug;
+
+        if (!slug || typeof slug !== 'string') {
+            return null;
+        }
+
+        return `/api/locations/${slug}`;
+    });
 
     const {
         data: currentLocation,
         status: currentLocationStatus,
         error: currentLocationError,
         refresh: refreshCurrentLocation,
-    } = useFetch<SelectLocationWithLogs>(locationUrlWithSlug, {
+    } = useFetch<SelectLocationWithLogs>(() => locationUrlWithSlug.value ?? '', {
         lazy: true,
         immediate: false,
         watch: [locationUrlWithSlug],
-        });
+    });
 
     const sidebarStore = useSidebarStore();
     const mapStore = useMapStore();
@@ -45,17 +53,56 @@ export const useLocationStore = defineStore("useLocationStore", () => {
             sidebarStore.sidebarItems = sidebarItems;
             mapStore.mapPoints = mapPoints;
         }
-        else if (currentLocation.value && CURRENT_LOCATION_PAGES.has(route.name?.toString() || '')) {
-            sidebarStore.sidebarItems = [];
-            mapStore.mapPoints = [currentLocation.value];
-        }
-        sidebarStore.loading = locationsStaus.value === 'pending';
+        else if (currentLocation.value && CURRENT_LOCATION_PAGES.has(route.name?.toString() || "")) {
+            const mapPoints: MapPoint[] = [];
+            const sidebarItems: SidebarItem[] = [];
 
+            if (!currentLocation.value.slug) return;
+
+            const slug = currentLocation.value.slug;
+
+            if (!slug) return;
+
+            currentLocation.value.locationLogs.forEach((log) => {
+                const mapPoint = createMapPointFromLocationLog(log, slug);
+
+                sidebarItems.push({
+                    id: `location-log-${log.id}`,
+                    label: log.name,
+                    icon: "tabler:map-pin-filled",
+                    to: {
+                        name: "dashboard-location-slug-id",
+                        params: {
+                            slug,
+                            id: log.id
+                        }
+                    },
+                    mapPoint,
+                });
+
+                mapPoints.push(mapPoint);
+            });
+
+            sidebarStore.sidebarItems = sidebarItems;
+            if (mapPoints.length) {
+                mapStore.mapPoints = mapPoints;
+            }
+            else {
+                mapStore.mapPoints = [currentLocation.value];
+            }
+        }
+        sidebarStore.loading =
+            locationsStatus.value === 'pending' ||
+            currentLocationStatus.value === 'pending';
+
+        if (sidebarStore.loading) {
+            mapStore.mapPoints = [];
+        }
     });
 
     return {
         locations,
-        locationsStaus,
+        locationsStatus,
         refreshLocations,
         currentLocation,
         currentLocationStatus,

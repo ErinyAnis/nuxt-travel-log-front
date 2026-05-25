@@ -74,8 +74,7 @@ onBeforeRouteUpdate((to) => {
                             </NuxtLink>
                         </li>
                         <li class="hover:bg-base-300 hover:cursor-pointer">
-                            <NuxtLink
-                                :to="{ name: 'dashboard-location-slug-edit', params: { slug: route.params.slug } }">
+                            <NuxtLink :to="{ name: 'dashboard-location-slug-edit', params: { slug: location.slug } }">
                                 <Icon name="tabler:map-pin-cog" size="20" />Edit
                             </NuxtLink>
                         </li>
@@ -91,13 +90,15 @@ onBeforeRouteUpdate((to) => {
                     Add a log to get started.
                 </p>
                 <NuxtLink class="btn btn-primary mt-2"
-                    :to="{ name: 'dashboard-location-slug-add', params: { slug: route.params.slug } }">Add Location Log
+                    :to="{ name: 'dashboard-location-slug-add', params: { slug: location.slug } }">Add Location
+                    Log
                     <Icon name="tabler:map-pin-plus" size="24" />
                 </NuxtLink>
             </div>
-            <div v-else-if="location?.locationLogs.length" class="location-list custom-scrollbar">
+            <div v-if="route.name === 'dashboard-location-slug' && !loading && location?.locationLogs.length"
+                class="location-list custom-scrollbar">
                 <LocationCard v-for="log in location.locationLogs" :key="log.id"
-                    :mapPoint="createMapPointFromLocationLog(log)">
+                    :mapPoint="createMapPointFromLocationLog(log, location.slug)">
                     <template v-slot:top>
                         <p class="text-sm italic text-gray-500">
                             <span v-if="log.startedAt !== log.endedAt">
