@@ -7,14 +7,21 @@ export async function findLocationLog(id: number, userId: number) {
         where: and(
             eq(locationLog.id, id),
             eq(locationLog.userId, userId)
-        )
+        ),
+        with: {
+            images: {
+                orderBy(fields, operators) {
+                    return operators.desc(fields.createdAt);
+                }
+            }
+        }
     });
 
     return foundLog;
 }
 
 export async function insertLocationLog(insertable: InsertLocationLog, locationId: number, userId: number) {
-    const [inserted]=await db.insert(locationLog).values({
+    const [inserted] = await db.insert(locationLog).values({
         ...insertable,
         locationId,
         userId

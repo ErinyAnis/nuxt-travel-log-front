@@ -26,9 +26,14 @@ export default defineNuxtConfig({
     ],
     optimizeDeps: {
       include: ['maplibre-gl']
+    },
+    server: {
+      watch: {
+        ignored: ['./docker-data/*']
+      }
     }
   },
-   runtimeConfig: {
+  runtimeConfig: {
     public: {
       maptilerKey: process.env.NUXT_PUBLIC_MAPTILER_KEY
     }

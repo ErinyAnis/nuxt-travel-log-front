@@ -1,5 +1,5 @@
 import { CURRENT_LOCATION_PAGES, LOCATION_PAGES } from "~/lib/constants";
-import type { SelectLocationWithLogs, SelectLocationLog } from "~/lib/db/schema";
+import type { SelectLocationWithLogs, SelectLocationLogWithImages } from "~/lib/db/schema";
 import type { MapPoint } from "~/lib/types";
 
 export const useLocationStore = defineStore("useLocationStore", () => {
@@ -40,7 +40,7 @@ export const useLocationStore = defineStore("useLocationStore", () => {
         refresh: refreshCurrentLocation,
     } = useFetch<SelectLocationWithLogs>(() => locationUrlWithSlug.value ?? '', {
         lazy: true,
-        immediate: false,
+        immediate: true,
         watch: [locationUrlWithSlug],
     });
 
@@ -49,11 +49,11 @@ export const useLocationStore = defineStore("useLocationStore", () => {
     status: currentLocationLogStatus,
     error: currentLocationLogError,
     refresh: refreshCurrentLocationLog,
-} = useFetch<SelectLocationLog>(
+} = useFetch<SelectLocationLogWithImages>(
     () => locationLogUrlWithSlugAndId.value ?? '',
     {
         lazy: true,
-        immediate: false,
+        immediate: true,
         watch: [locationLogUrlWithSlugAndId],
     }
 );

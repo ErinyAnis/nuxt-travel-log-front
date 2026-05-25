@@ -94,6 +94,8 @@ onBeforeRouteUpdate((to) => {
             <div class="max-w-xl">
                 <p class="text-sm">{{ locationLog.description }}</p>
             </div>
+
+            <ImageList :images="locationLog.images" />
         </div>
 
         <div v-else>
