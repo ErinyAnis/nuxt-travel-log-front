@@ -95,7 +95,8 @@ onBeforeRouteUpdate((to) => {
                     <Icon name="tabler:map-pin-plus" size="24" />
                 </NuxtLink>
             </div>
-            <div v-else-if="location?.locationLogs.length" class="location-list custom-scrollbar">
+            <div v-if="route.name === 'dashboard-location-slug' && !loading && location?.locationLogs.length"
+                class="location-list custom-scrollbar">
                 <LocationCard v-for="log in location.locationLogs" :key="log.id"
                     :mapPoint="createMapPointFromLocationLog(log, location.slug)">
                     <template v-slot:top>

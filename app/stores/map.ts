@@ -1,4 +1,5 @@
 
+import { CENTER_USA } from "~/lib/constants";
 import type { MapPoint } from "~/lib/types";
 
 export const useMapStore = defineStore("useMapStore", () => {
@@ -16,8 +17,13 @@ export const useMapStore = defineStore("useMapStore", () => {
 
         effect(() => {
             const firstpoint = mapPoints.value[0];
-            if (!firstpoint)
+            if (!firstpoint) {
+                map.map?.flyTo({
+                    center: CENTER_USA,
+                    zoom: 2
+                });
                 return;
+            }
 
             bounds = mapPoints.value.reduce((bounds, point) => {
                 return bounds.extend([point.long, point.lat]);

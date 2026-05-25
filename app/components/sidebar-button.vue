@@ -39,7 +39,7 @@ const link = computed(() => {
                 </span>
 
                 <Transition name="grow">
-                    <span v-if="showLabel" class="line-clamp-1 whitespace-nowrap max-w-50 mb-1" :class="iconColor">
+                    <span v-if="showLabel" class="mb-1 truncate" :class="iconColor">
                         {{ props.label }}
                     </span>
                 </Transition>

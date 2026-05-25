@@ -10,14 +10,14 @@ export const useLocationStore = defineStore("useLocationStore", () => {
     });
 
     const locationUrlWithSlug = computed(() => {
-    const slug = route.params.slug;
+        const slug = route.params.slug;
 
-    if (!slug || typeof slug !== 'string') {
-        return null;
-    }
+        if (!slug || typeof slug !== 'string') {
+            return null;
+        }
 
-    return `/api/locations/${slug}`;
-});
+        return `/api/locations/${slug}`;
+    });
 
     const {
         data: currentLocation,
@@ -95,6 +95,9 @@ export const useLocationStore = defineStore("useLocationStore", () => {
             locationsStatus.value === 'pending' ||
             currentLocationStatus.value === 'pending';
 
+        if (sidebarStore.loading) {
+            mapStore.mapPoints = [];
+        }
     });
 
     return {
