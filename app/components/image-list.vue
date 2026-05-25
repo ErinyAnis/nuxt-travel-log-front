@@ -4,6 +4,8 @@ import type { SelectLocationLogImage } from '~/lib/db/schema';
 defineProps<{
     images: SelectLocationLogImage[];
 }>();
+
+const congig = useRuntimeConfig();
 </script>
 
 <template>
@@ -11,7 +13,7 @@ defineProps<{
         <div v-for="image in images" :key="image.id"
             class="card card-compact h-40 w-64 shrink-0 flex justify-center items-center bg-base-300">
             <div class="card-body size-full">
-                <img :src="`http://localhost:9000/images/${image.key}`" alt="location log image"
+                <img :src="`${congig.public.S3_BUCKET_URL}/${image.key}`" alt="location log image"
                     class="size-full object-cover" />
             </div>
         </div>
