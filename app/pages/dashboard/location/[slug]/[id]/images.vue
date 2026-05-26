@@ -122,7 +122,13 @@ async function uploadImage() {
             </button>
         </div>
 
+        <!-- <ImageList class="ml-2" :images="locationLog?.images || []">
+            <template #default="{ image }">
+                <button class="btn btn-error btn-xs" @click="deleteImage(image)">
+                    Delete
+                </button>
+            </template>
+</ImageList> -->
         <ImageList class="ml-2" :images="locationLog?.images || []" />
     </div>
-
 </template>
