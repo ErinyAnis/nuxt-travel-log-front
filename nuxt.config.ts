@@ -1,5 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import "./app/lib/env";
+import env from "./app/lib/env";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -26,12 +27,19 @@ export default defineNuxtConfig({
     ],
     optimizeDeps: {
       include: ['maplibre-gl']
+    },
+    server: {
+      watch: {
+        ignored: ['./docker-data/*']
+      }
     }
   },
-   runtimeConfig: {
+  runtimeConfig: {
     public: {
-      maptilerKey: process.env.NUXT_PUBLIC_MAPTILER_KEY
-    }
+      maptilerKey: process.env.NUXT_PUBLIC_MAPTILER_KEY,
+      s3BucketUrl: env.S3_BUCKET_URL,
+    },
+
   },
   colorMode: {
     dataValue: 'theme',

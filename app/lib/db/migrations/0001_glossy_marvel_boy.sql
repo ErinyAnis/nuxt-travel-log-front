@@ -1,0 +1,1 @@
+ALTER TABLE `locationLogImage` ADD `user_id` integer NOT NULL;
