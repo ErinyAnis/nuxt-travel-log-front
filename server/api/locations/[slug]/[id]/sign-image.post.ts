@@ -10,7 +10,6 @@ const MAX_CONTENT_LENGTH = 1024 * 1024 * 5;
 
 const ImageSchema = z.object({
     contentLength: z.number().min(1).max(MAX_CONTENT_LENGTH),
-    checksum: z.string(),
 });
 
 export default defineAuthenticatedEventHandler(async (event) => {
@@ -34,11 +33,9 @@ export default defineAuthenticatedEventHandler(async (event) => {
         Bucket: env.S3_BUCKET,
         Key: key,
         Expires: 120,
-        Fields: {
-            "x-amz-checksum-sha256": result.data.checksum,
-        },
+        Fields: {},
         Conditions: [
-            ["content-length-range", result.data.contentLength, result.data.contentLength],
+            ["content-length-range", 1, MAX_CONTENT_LENGTH],
             ["eq", "$x-amz-meta-user-id", event.context.user.id.toString()],
             ["eq", "$x-amz-meta-location-log-id", id],
         ],

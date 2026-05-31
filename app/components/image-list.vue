@@ -2,7 +2,7 @@
 import type { SelectLocationLogImage } from '~/lib/db/schema';
 import { FetchError } from "ofetch";
 
-defineProps<{
+const props = defineProps<{
     images: SelectLocationLogImage[];
 }>();
 
@@ -16,6 +16,20 @@ const isOpen = ref(false);
 const isDeleting = ref(false);
 const errorMessage = ref("");
 const deletingImage = ref<SelectLocationLogImage | null>(null);
+const imageUrls = ref<Record<string, string>>({});
+
+async function loadImageUrl(key: string) {
+    if (imageUrls.value[key]) return;
+    const { url } = await $fetch<{ url: string }>(
+        `/api/locations/${route.params.slug}/${route.params.id}/image/image-url`,
+        { query: { key } }
+    );
+    imageUrls.value[key] = url;
+}
+
+watch(() => props.images, (images) => {
+    images.forEach(img => loadImageUrl(img.key));
+}, { immediate: true });
 
 function deleteImage(image: SelectLocationLogImage) {
     deletingImage.value = image;
@@ -50,8 +64,7 @@ async function confirmDelete() {
     <div class="flex mt-2 gap-2 overflow-auto custom-scrollbar">
         <div v-for="image in images" :key="image.id" class="card card-compact h-40 w-64 shrink-0 bg-base-300">
             <figure class="relative h-full p-4">
-                <img :src="`http://localhost:9000/images/${image.key}`" alt="location log image"
-                    class="size-full object-cover" />
+                <img :src="imageUrls[image.key] || ''" alt="location log image" class="size-full object-cover" />
                 <div class="absolute bottom-2 right-2">
                     <button :disabled="deletingImage === image && isDeleting" class="btn btn-error btn-sm w-full"
                         @click="deleteImage(image)">

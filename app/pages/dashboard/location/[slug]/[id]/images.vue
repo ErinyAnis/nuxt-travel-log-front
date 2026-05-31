@@ -23,11 +23,11 @@ const selectImage = (event: Event) => {
     }
 }
 
-async function getChecksum(blob: Blob) {
-    const arrayBuffer = await blob.arrayBuffer();
-    const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-    return btoa(String.fromCharCode(...new Uint8Array(hashBuffer)));
-}
+// async function getChecksum(blob: Blob) {
+//     const arrayBuffer = await blob.arrayBuffer();
+//     const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+//     return btoa(String.fromCharCode(...new Uint8Array(hashBuffer)));
+// }
 
 async function uploadImage() {
     if (!image.value || !previewUrl.value) return;
@@ -36,7 +36,6 @@ async function uploadImage() {
     errorMessage.value = "";
     const previewImage = new Image();
     previewImage.addEventListener('load', async () => {
-        console.log('Image dimensions:', previewImage.width, previewImage.height);
         const width = Math.min(1000, previewImage.width);
         const resized = await createImageBitmap(previewImage, {
             resizeWidth: width,
@@ -47,13 +46,13 @@ async function uploadImage() {
             type: 'image/jpeg',
             quality: 0.9,
         });
-        const checksum = await getChecksum(blob);
+        // const checksum = await getChecksum(blob);
 
         try {
             const { fields, key, url } = await $csrfFetch(`/api/locations/${route.params.slug}/${route.params.id}/sign-image`, {
                 method: 'POST',
                 body: {
-                    checksum,
+                    // checksum,
                     contentLength: blob.size,
                 },
             });
@@ -67,9 +66,6 @@ async function uploadImage() {
             await $fetch(url, {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'x-amz-checksum-algorithm': 'SHA256',
-                },
             });
 
             await $csrfFetch(`/api/locations/${route.params.slug}/${route.params.id}/image`, {
