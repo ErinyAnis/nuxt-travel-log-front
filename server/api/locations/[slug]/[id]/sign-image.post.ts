@@ -1,5 +1,4 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import z from "zod";
 import env from "~/lib/env";
 import createS3Client from "~/utils/create-s3-client";
@@ -24,22 +23,8 @@ export default defineAuthenticatedEventHandler(async (event) => {
 
     await event.$fetch(`/api/locations/${slug}/${id}`);
 
-    const client = createS3Client();
-
     const fileName = crypto.randomUUID();
     const key = `${event.context.user.id}/${id}/${fileName}.jpg`;
 
-    const command = new PutObjectCommand({
-        Bucket: env.S3_BUCKET,
-        Key: key,
-        ContentType: "image/jpeg",
-        Metadata: {
-            "user-id": event.context.user.id.toString(),
-            "location-log-id": id,
-        },
-    });
-
-    const url = await getSignedUrl(client, command, { expiresIn: 120 });
-
-    return { url, key };
+    return { key };
 });
