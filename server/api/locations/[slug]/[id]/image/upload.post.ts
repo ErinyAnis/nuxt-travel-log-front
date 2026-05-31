@@ -4,7 +4,7 @@ import createS3Client from "~/utils/create-s3-client";
 import defineAuthenticatedEventHandler from "~/utils/define-authenticated-event-handler";
 
 export default defineAuthenticatedEventHandler(async (event) => {
-    const key = getRouterParam(event, 'key') as string;
+    const key = getHeader(event, 'x-image-key');
 
     if (!key) {
         return sendError(event, createError({ statusCode: 400, statusMessage: "Key is required" }));
