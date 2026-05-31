@@ -168,7 +168,7 @@ function toggleSidebar() {
                 <div v-if="sidebarStore.loading || sidebarStore.sidebarItems.length" class="divider" />
 
                 <div v-if="sidebarStore.loading" class="px-4">
-                    <div class="skelton h-4 w-full" />
+                    <div class="skeleton h-4 w-full" />
                 </div>
 
                 <div v-if="!sidebarStore.loading && sidebarStore.sidebarItems.length" class="flex flex-col">
