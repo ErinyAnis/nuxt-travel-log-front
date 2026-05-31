@@ -56,8 +56,8 @@ async function uploadImage() {
                 },
             });
 
-            await $csrfFetch(`/api/locations/${route.params.slug}/${route.params.id}/image/upload-image`, {
-                method: 'POST',
+            await $fetch(`/api/locations/${route.params.slug}/${route.params.id}/image/upload`, {
+                method: 'POST' as any,
                 body: blob,
                 headers: {
                     'Content-Type': 'image/jpeg',
