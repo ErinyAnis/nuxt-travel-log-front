@@ -49,23 +49,19 @@ async function uploadImage() {
         // const checksum = await getChecksum(blob);
 
         try {
-            const { fields, key, url } = await $csrfFetch(`/api/locations/${route.params.slug}/${route.params.id}/sign-image`, {
+            const { key, url } = await $csrfFetch(`/api/locations/${route.params.slug}/${route.params.id}/sign-image`, {
                 method: 'POST',
                 body: {
-                    // checksum,
                     contentLength: blob.size,
                 },
             });
 
-            const formData = new FormData();
-            Object.entries(fields).forEach(([key, value]) => {
-                formData.append(key, value as string);
-            });
-            formData.append('file', blob);
-
             await $fetch(url, {
-                method: 'POST',
-                body: formData,
+                method: 'PUT',
+                body: blob,
+                headers: {
+                    'Content-Type': 'image/jpeg',
+                },
             });
 
             await $csrfFetch(`/api/locations/${route.params.slug}/${route.params.id}/image`, {
