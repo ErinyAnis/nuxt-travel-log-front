@@ -1,8 +1,8 @@
-import { S3Client } from "@aws-sdk/client-s3";
-import createS3Client from "~/utils/create-s3-client";
-import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import z from "zod";
 import env from "~/lib/env";
+import createS3Client from "~/utils/create-s3-client";
 import defineAuthenticatedEventHandler from "~/utils/define-authenticated-event-handler";
 import sendZodError from "~/utils/send-zod-error";
 
@@ -29,21 +29,17 @@ export default defineAuthenticatedEventHandler(async (event) => {
     const fileName = crypto.randomUUID();
     const key = `${event.context.user.id}/${id}/${fileName}.jpg`;
 
-    const { url, fields } = await createPresignedPost(client, {
+    const command = new PutObjectCommand({
         Bucket: env.S3_BUCKET,
         Key: key,
-        Expires: 120,
-        Fields: {},
-        Conditions: [
-            ["content-length-range", 1, MAX_CONTENT_LENGTH],
-            ["eq", "$x-amz-meta-user-id", event.context.user.id.toString()],
-            ["eq", "$x-amz-meta-location-log-id", id],
-        ],
+        ContentType: "image/jpeg",
+        Metadata: {
+            "user-id": event.context.user.id.toString(),
+            "location-log-id": id,
+        },
     });
 
-    fields["x-amz-meta-user-id"] = event.context.user.id.toString();
-    fields["x-amz-meta-location-log-id"] = id;
+    const url = await getSignedUrl(client, command, { expiresIn: 120 });
 
-    return { url, fields, key };
+    return { url, key };
 });
-
